@@ -6,7 +6,6 @@ import os
 import json
 from dotenv import load_dotenv
 
-# Загружаем переменные из .env файла (только для локальной работы)
 load_dotenv()
 
 # Читаем доступы к БД
@@ -63,8 +62,7 @@ def handle_translate(body: dict):
 
 def handler(event, context):
     """
-    Главная точка входа для Yandex Cloud Function.
-    Сюда будут приходить запросы от фронтенда.
+    Главная точка входа для Yandex Cloud Function, куда будут приходить запросы от фронтенда.
     """
     
     # Получаем HTTP-метод и тело запроса
