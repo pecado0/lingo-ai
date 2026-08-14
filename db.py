@@ -31,12 +31,12 @@ def get_ydb_driver():
     driver.wait(timeout = 15)
     return driver
 
-# Глобальная инициализация (выполнится один раз при старте контейнера)
+# Инициализация драйвера и пула
 DRIVER = get_ydb_driver()
 POOL = ydb.SessionPool(DRIVER)
 
 def _execute_query(session, query: str, parameters: dict):
-    """Универсальная функция для выполнения запроса в рамках сессии."""
+    """ Функция для выполнения запроса в рамках сессии."""
 
     prepared_query = session.prepare(query)
     return session.transaction(ydb.SerializableReadWrite()).execute(
@@ -68,7 +68,6 @@ def create_user(email: str, password_hash: str, name: str = ""):
     }
 
     try:
-        # Передаем функцию через lambda, чтобы пул мог подставлять туда session
         POOL.retry_operation_sync(
             lambda session: _execute_query(session, query, parameters)
         )
@@ -222,5 +221,5 @@ def add_user_word(user_id: str, word: str):
         return True
     
     except Exception as e:
-        print(f"Ошибка при добавлении слова пользователю: {e}")
+        print(f"Ошибка при добавлении слова в словарь пользователя: {e}")
         return False
