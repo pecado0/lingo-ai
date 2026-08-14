@@ -4,26 +4,27 @@ import json
 import requests
 from litellm import completion
 
+# Логи LiteLLM
 import litellm
-litellm.set_verbose = True  # Включаем подробные логи LiteLLM
+litellm.set_verbose = True  
 
 load_dotenv()
 
 def get_iam_token() -> str:
-    # Для локальной разработки используем токен из переменной окружения
+    # Локальная разработка
     local_token = os.getenv("YANDEX_IAM_TOKEN")
     
     if local_token:
         return local_token
 
-    # Для облачной функции получаем токен из метаданных
+    # Облачная функция
     try:
         url = "http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token"
         response = requests.get(url, headers={"Metadata-Flavor": "Google"}, timeout=2)
         response.raise_for_status()
         return response.json()["access_token"]
     except Exception as e:
-        print(f"!!! ОШИБКА LITELLM: {repr(e)}")
+        print(f"Ошибка LITELLM: {repr(e)}")
         raise RuntimeError(f"Error occurred while fetching IAM token: {e}")
 
 def get_llm_response(text: str, context: str | dict |None = None) -> dict:
@@ -34,12 +35,12 @@ def get_llm_response(text: str, context: str | dict |None = None) -> dict:
     Ты — профессиональный лингвист и переводчик. 
     Твоя задача — перевести предоставленный текст с учетом контекста.
 
-    Твой ответ должен быть СТРОГО в формате JSON. Не пиши никаких приветствий, пояснений и не используй разметку Markdown (без ```json). 
+    Твой ответ должен быть СТРОГО в формате JSON. Не пиши приветсвие, пояснение и не используй разметку Markdown (без ```json). 
     Верни только заполненный JSON-объект по следующему шаблону:
 
     {
         "translation": "точный перевод текста",
-        "transcription": "фонетическая транскрипция, например [bæŋk]",
+        "transcription": "транскрипция, например [bæŋk]",
         "explanation": "краткое объяснение значения слова/фразы и нюансов применения в данном контексте",
         "examples": [
             "первый пример использования с переводом",
