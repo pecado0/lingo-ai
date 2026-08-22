@@ -10,9 +10,6 @@ from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
 from aiogram.types import BotCommandScopeDefault
 
-"""
-todo: разбить этот файл на мейн и хендлеры (для этого сделать роутер), дописать клавиатуру, авторизацию. Переписать хендлеры более компактно, обработку исключений вынести в мейн
-"""
 # Чтение файлов локального окружения 
 load_dotenv()
 
